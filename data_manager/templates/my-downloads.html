@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <title>Downloads</title>
+{% endblock %}
+
+{% block script %}
+<style>
+ .table > tbody > tr > td {
+ vertical-align: middle;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1 class="text-center">Downloads</h1>
+    <br>
+    {% if download_list %}
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Date & Time</th>
+                    <th>Query</th>
+                    <th>Number of records</th>
+                    <th>File size</th>
+                    <th>Download link</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for download in download_list %}
+                <tr>
+                    <td class="col-md-2">{{ download.created_at|date:'r' }}</td>
+                    <td class="col-md-4">{{ download.query|default_if_none:"" }}</td>
+                    <td class="col-md-2">{{ download.record_count|default_if_none:"" }}</td>
+                    {% if download.file.size != None %}
+                    <td class="col-md-1">{{ download.file.size|filesizeformat }}</td>
+                    <td class="col-md-2"><a href="{% url 'my-download-file' download.id %}">{{ download }}</a></td>
+                    {% else %}
+                    <td class="col-md-1"></td>
+                    <td class="col-md-2">{{ download }}</td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <!----- PAGINATION ----->
+    {% include "paginator-template.html" %}
+
+    {% else %}
+    <p>No downloads available.</p>
+    {% endif %}
+</div>
+
+{% endblock %}

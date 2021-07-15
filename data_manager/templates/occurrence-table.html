@@ -1,0 +1,51 @@
+<!--to be populated by results returned by api_search(request)-->
+{% if occurrences %}
+<table id="occurrence_table" class="table table-striped">
+    <tr>
+        <th>Scientific name</th>
+        <th>Latitude</th>
+        <th>Longitude</th>
+        <th>Year</th>
+        <th>Month</th>
+        <th>Basis of record</th>
+        <th>Dataset</th>
+        <th>Institution code</th>
+        <th>Collection code</th>
+        <th>Locality</th>
+    </tr>
+    {% for occurrence in occurrences %}
+    <tr>
+        {% if occurrence.taxonKey %}
+        <td><a href="{% url 'taxon-detail' occurrence.taxonKey %}">{{ occurrence.scientificName|default_if_none:"" }}</a></td>
+        {% else %}
+        <td>{{ occurrence.scientificName|default_if_none:"" }}</td>
+        {% endif %}
+        <td>{{ occurrence.decimalLatitude|default_if_none:"" }}</td>
+        <td>{{ occurrence.decimalLongitude|default_if_none:"" }}</td>
+        <td>{{ occurrence.year|default_if_none:"" }}</td>
+        <td>{{ occurrence.month|default_if_none:"" }}</td>
+        <td>{{ occurrence.basisOfRecord|lower|default_if_none:"" }}</td>
+        {% if occurrence.datasetId %}
+        <td><a href="{% url 'dataset-detail-view' occurrence.datasetId %}">{{ occurrence.datasetTitle }}</a></td>
+        {% else %}
+        <td></td>
+        {% endif %}
+        <td>{{ occurrence.institutionCode|default_if_none:"" }}</td>
+        <td>{{ occurrence.collectionCode|default_if_none:"" }}</td>
+        <td>{{ occurrence.locality|default_if_none:"" }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+{% endif %}
+{%  load url_replace %}
+<nav aria-label="Page navigation">
+    <ul class="pager">
+        {% if has_previous_page %}
+            <li><a href="?{% url_replace offset=offset|add:'-20' %}" aria-label="Previous">Previous</a></li>
+        {% endif %}
+        {% if has_next_page %}
+            <li><a href="?{% url_replace offset=offset|add:'20' %}" aria-label="Next">Next</a></li>
+        {% endif %}
+    </ul>
+</nav>

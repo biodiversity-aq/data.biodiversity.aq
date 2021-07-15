@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+<div class="container" style="display: block; text-align: center; margin-top: 50px;">
+    <a href="{% url 'home' %}"><img src="{% static 'data_manager/logos/biodiversityaq_Logo_RGB.svg' %}" style="height:100px;"></a>
+    {% block content %}
+    {% endblock %}
+</div>
+{% endblock %}

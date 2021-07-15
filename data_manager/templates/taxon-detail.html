@@ -1,0 +1,195 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+
+{% block title %}
+<title>{{ taxon.scientificName }}</title>
+{% endblock %}
+
+{% block script %}
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.css">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css"/>
+<link href="{% static 'data_manager/css/custom_dataset_detail.css' %}" media="screen" rel="stylesheet" type="text/css">
+<style>
+/* change colour of buttons */
+.slick-prev:before, .slick-next:before {
+    color: #999999;
+}
+
+/* ADD SPACE BETWEEN SLIDES IN CAROUSEL */
+/* the slides */
+.slick-slide {
+    margin: 0 10px;
+}
+/* the parent */
+.slick-list {
+    margin: 0 -10px;
+}
+
+</style>
+{% endblock %}
+
+{% block body %}
+<!----- SUMMARY ----->
+<div class="container text-center more-spacing" id="summary">
+    <strong>
+        {% if taxon.rank %}{{ taxon.rank }}{% endif %}
+        {% if taxon.taxonomicStatus %}{% if taxon.rank %} | {% endif %}{{ taxon.taxonomicStatus }}{% endif %}
+        {% if taxon.nameType %}{% if taxon.taxonomicStatus %} | {% endif %}{{ taxon.nameType }}{% endif %}</strong>
+    <h2>{{ taxon.scientificName }}</h2>
+    <ul class="ul-no-bullet">
+        {% if taxon.acceptedKey %}
+        <li><strong>Accepted as <a href="{% url 'taxon-detail' taxon.acceptedKey %}">{{ taxon.accepted }}</a></strong></li>
+        {% endif %}
+        {% if references %}<li><strong><a href="{{ references }}">{% if dataset.title %}{{ dataset.title }}{% else %}Reference{% endif %}</a></strong></li>
+        {% else %}
+        <li><strong><a href="https://www.gbif.org/dataset/{{ taxon.datasetKey }}">{% if dataset.title %}{{ dataset.title }}{% else %}Reference{% endif %}</a></strong></li>
+        {% endif %}
+        {% if taxon.nubKey and taxon.nubKey != taxon.key %}
+        <li><strong>View in <a href="{% url 'taxon-detail' taxon.nubKey %}">GBIF Taxonomy Backbone</a></strong></li>
+        {% endif %}
+    </ul>
+    {% if parents %}
+    <div class="well well-sm table-responsive" style="margin-top: 30px;">
+        <table class="table">
+            <thead>
+            <tr>
+                {% for parent in parents %}
+                <th>{% if parent.rank %}{{ parent.rank|title }}{% else %}Unranked{% endif %}</th>
+                {% endfor %}
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                {% for parent in parents %}
+                <th><a href="{% url 'taxon-detail' parent.key  %}">{{ parent.scientificName|default_if_none:""  }}</a></th>
+                {% endfor %}
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+    <hr>
+    <!-- MEDIA -->
+    {% if media %}
+    <div class="container" id="media-carousel">
+        {% for image in media %}
+        <div><img src="{{ image }}" style="height:150px; width: auto;"></div>
+        {% endfor %}
+        <!--https://www.gbif.org/occurrence/gallery?taxon_key=-->
+    </div>
+    {% endif %}
+</div>
+
+
+<!-- DIRECT CHILDREN & DISTRIBUTION -->
+{% if children %}
+<div class="container" id="children">
+    <div class="row">
+        <!--DIRECT CHILDREN-->
+        <div class="col-md-5">
+            <h3>Immediate children</h3>
+            <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Scientific name</th>
+                        <th>Taxonomic status</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for child in children %}
+                    {% if child.taxonomicStatus != 'ACCEPTED' %}
+                    <tr class="danger">
+                        {% else %}
+                    <tr>
+                        {% endif %}
+                        <td>{{ child.rank|lower }}</td>
+                        <td><a href="{% url 'taxon-detail' child.key %}">{{ child.scientificName }}</a></td>
+                        <td>{{ child.taxonomicStatus|lower }}</td>
+                    </tr>
+                    {% endfor %}
+                    {% if not end_of_records %}
+                    <tr>
+                        <th colspan="3"><a href="https://www.gbif.org/species/{{ taxon.key }}" class="expander">Show more</a></th>
+                    </tr>
+                    {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!--OCCURRENCE DISTRIBUTION-->
+        <div class="col-md-7">
+            {% if has_occurrence %}
+            <h3>Occurrence distribution</h3>
+            <div id="occurrence-map" style="height: 400px; background: black;"><div id="info"></div></div>
+            {% else %}
+            <h3>No occurrence found</h3>
+            <p>Perhaps try your search in the links below</p>
+            <ul>
+                <li><a href="https://www.gbif.org/species/{{ taxon.key }}">GBIF</a></li>
+                <li><a href="http://www.iobis.org/">OBIS</a></li>
+                <li><a href="http://www.marinespecies.org/">WoRMS</a></li>
+            </ul>
+            {% endif %}
+        </div>
+    </div>
+<hr>
+</div>
+{% else %}
+<!--NO CHILDREN-->
+{% if has_occurrence %}
+<div class="container text-center">
+    <h3>Occurrence distribution</h3>
+    <div id="occurrence-map" style="height: 400px; width:90%; background: black; display: inline-block;"><div id="info"></div></div>
+    <hr>
+</div>
+{% endif %}
+{% endif %}
+
+<!--REFERENCES AND CITATION-->
+<div class="container more-spacing" id="occurrence">
+    {% if has_occurrence %}
+    <h3>Occurrences</h3>
+    <a href="{% url 'occurrence-search' %}?taxon={{ taxon.key }}">Link to occurrence records</a>
+    {% endif %}
+</div>
+<div class="container more-spacing" id="citation">
+    <h3>Taxonomic citation</h3>
+    <p> <!--date according to UTC timezone-->
+        {{ taxon.scientificName }}. {{ dataset.title }}. Checklist dataset
+        <a href="https://doi.org/{{ dataset.doi }}">https://doi.org/{{ dataset.doi }}</a>
+        accessed via biodiversity.aq on {% now "Y-m-d" %}.</p>
+</div>
+{% endblock %}
+
+
+{% block bottom_script %}
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+<script src="{% static 'data_manager/js/plot_map.js' %}"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+    // media carousel (images)
+    $('#media-carousel').slick({
+        dots: true,
+        infinite: false,
+        lazyLoad: 'ondemand',
+        speed: 300,
+        slidesToShow: 1,
+        centerMode: false,
+        variableWidth: true,
+    });
+
+    // variables for plotMap()
+    var vectorUrl = "{% url 'api-occurrence-grid' %}?type=occurrence&taxon={{ taxon.key }}";
+    var baseLayerUrl = "{{ GEOSERVER_HOST }}" + "/antabif/wms?";
+
+    plotMap(vectorUrl, 'occurrence-map', baseLayerUrl);
+
+});
+
+
+</script>
+{% endblock %}

@@ -1,0 +1,14 @@
+from .base import *
+
+ALLOWED_HOSTS = '*'
+
+REST_FRAMEWORK.update({
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '100/second',
+        'user': '100/second'
+    }
+})
+
+{% block salt %}
+
+{% endblock %}

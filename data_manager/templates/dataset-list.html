@@ -1,0 +1,117 @@
+{% extends 'search-results-base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block script %}
+    <!-- Custom CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
+    <link href="{% static 'data_manager/css/custom_search_results_base.css' %}" media="screen" rel="stylesheet" type="text/css">
+    <link href="{% static 'data_manager/css/custom_dataset_list.css' %}" media="screen" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block filter %}
+<!-- REFINE SEARCH FILTERS -->
+<div class="col-md-12" id="search-filters">
+    <form action="." method="GET" id="filter-form">
+    <ul class="nav nav-pills nav-stacked">
+        <!--hidden input-->
+        {{ form.type }}
+        <!--error message for form-->
+        <li>{% if form.errors %}
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <div class="alert alert-danger"><strong>{{ field.label }}: {{ error|escape }}</strong></div>
+                    {% endfor %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                    <div class="alert alert-danger"><strong>{{ error|escape }}</strong></div>
+                {% endfor %}
+            {% endif %}
+        </li>
+        <li><h5>Search term</h5></li>
+        <li>{{ form.q }}</li>
+        <!-- KEYWORDS -->
+        <li><h5>Keywords</h5></li>
+        <li>{{ form.keyword }}</li>
+        <!-- PROJECTS -->
+        <li><h5>Projects</h5></li>
+        <li>{{ form.project }}</li>
+        <!-- DATA TYPES -->
+        <li><h5>Data types</h5></li>
+        <li>{{ form.data_type }}</li>
+		<!-- DATA TYPES -->
+        <li><h5>Publishers</h5></li>
+        <li>{{ form.publisher }}</li>
+        <!-- PROJECT CONTACTS -->
+        <li><h5>Project personnel</h5></li>
+        <li>{{ form.project_contact }}</li>
+        <li class="form-buttons">
+            <!-- SUBMIT BUTTON -->
+            <input class="btn btn-primary" type="submit" formaction="{% url 'dataset-search' %}">
+            <!-- RESET BUTTON -->
+            <input class="btn btn-default" type="button" onclick="resetForm()" value="Reset">
+            <!-- DOWNLOAD BUTTON -->
+            {% if page_obj.object_list %}
+            <input class="btn btn-primary" type="submit" value="Download" formaction="{% url 'dataset-download' %}">
+            {% endif %}
+        </li>
+    </ul>
+	</form>
+</div>
+{% endblock %} <!-- end form_filter block -->
+
+{% block results %}
+<div class="container">
+    <h2>Search dataset</h2>
+    <!----- DATASET LIST VIEW ----->
+    {% if page_obj.object_list %}
+    <h4>{{ page_obj.start_index }} - {{ page_obj.end_index }} of {{ page_obj.paginator.count|intcomma }} results</h4>
+    {% for dataset in page_obj.object_list %}
+        <ul class="ul-no-bullet">
+            <li><h4 id="dataset-title"><a href="{% url 'dataset-detail-view' dataset.id %}">{{ dataset.title }}</a></h4></li>
+            <li><strong>{{ dataset.data_type }} dataset {% if dataset.filtered_record_count %}&bull; {{ dataset.filtered_record_count|intcomma }} occurrence records {% endif %} </strong></li>
+            <li>{% if dataset.intellectual_right %}<strong>{{ dataset.intellectual_right }}</strong>{% endif %}</li>
+            <li>{% if dataset.publisher %}{{ dataset.publisher }}{% endif %}</li>
+            <li>{{ dataset.abstract|safe|truncatewords:40 }}</li>
+        </ul>
+    {% endfor %}
+    {% else %}
+        <h4>Sorry, no match found</h4>
+    {% endif %}
+    <br>
+    <!----- PAGINATION ----->
+    {% include "paginator-template.html" %}
+    {% endblock %}
+</div>
+<!--Javascript-->
+{% block bottom_script %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+<script type="text/javascript">
+/*  Function to reset form
+    Happens when user click on reset button*/
+function resetForm() {
+    // clear search term
+    $('#id_q').val('');
+    // clear projects
+    $('#id_project').val('');
+    // clear all selected scientific name
+    $('#id_keyword').select2({placeholder: 'filter with keyword'}).val(null).trigger("change");
+    // clear all checkboxes
+    $('input:checkbox').prop('checked', false);
+}
+
+
+$(document).ready(function() {
+
+    // toggle for offcanvas/sidebar
+    $('[data-toggle=offcanvas]').click(function() {
+        $('.row-offcanvas').toggleClass('active');
+    });
+
+    // select2 for keywords filter
+    $('#id_keyword').select2({placeholder: 'filter with keywords'});
+
+});
+
+</script>
+{% endblock %}

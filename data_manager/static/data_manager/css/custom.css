@@ -1,0 +1,76 @@
+/*******************
+   GENERAL STYLES
+********************/
+/* ul without bullet */
+.ul-no-bullet {
+  list-style-type: none;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.pagination-wrapper {
+    padding: 40px 0;
+    margin: 40px 0;
+}
+
+/* alert banner */
+.alert-danger {
+    width: 100%;
+    color: #F03B20;
+    font-size: 16px;
+}
+
+.alert {
+    margin-bottom: 0px;
+    border-radius: 0px;
+    z-index: 100000;
+}
+
+/* hosted by BBPF */
+#hostedby {
+    background-color: transparent;
+    margin-bottom: 0px;
+    width: 100%;
+    padding-bottom: 0px;
+}
+
+/* Map container in dataset detail page*/
+#datavizmap {
+    padding-left: 40px;
+    background-color: black;
+    height: 500px;
+}
+
+h2 {
+    color: #1F78B4;
+}
+
+/* remove padding, otherwise offcanvas is not completely hidden when shrink screen */
+.container-fluid {
+    padding: 0px;
+    min-height: 90%;
+}
+
+/* style for tooltip on map */
+#info {
+    position: relative;
+    height: 1px;
+    width: 1px;
+    z-index: 100;
+}
+.tooltip.in {
+    opacity: 1;
+}
+.tooltip.top .tooltip-arrow {
+    border-top-color: white;
+}
+.tooltip-inner {
+    border: 2px solid grey;
+}
+
+.more-spacing {
+    padding-top: 5%;
+    margin-top: -2%;
+}

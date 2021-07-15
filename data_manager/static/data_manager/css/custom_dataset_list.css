@@ -1,0 +1,35 @@
+/*  custom css for dataset list view
+    styles for dataset search results page
+    extends house styles (main.css) and custom styles for data.biodiversity.aq (custom.css)
+*/
+
+/*******************
+   SEARCH FILTERS
+********************/
+
+/* scrollable filter forms when too many checkboxes*/
+#id_data_type, #id_project_contact, #id_publisher {
+    max-height: 200px;
+    overflow-x: auto;
+    overflow-y: auto;
+    list-style-type: none;
+}
+
+/* text box styles to be consistent */
+#id_keyword, #id_project, #id_q, .select2 .select2-container .select2-container--default .select2-container--below {
+    height: 30px;
+    width: 190px;
+    overflow-x: auto;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    display: block;
+}
+
+/* increase space between datasets */
+#dataset-title {
+    padding-top: 20px;
+}
+
+.ul-no-bullet {
+    padding-left: 0;
+}

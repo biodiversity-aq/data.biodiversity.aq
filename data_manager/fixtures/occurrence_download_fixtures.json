@@ -1,0 +1,196 @@
+[
+  {
+    "model": "data_manager.DataType",
+    "pk": 1,
+    "fields": {
+      "data_type": "Metadata"
+    }
+  },
+  {
+    "model": "data_manager.DataType",
+    "pk": 2,
+    "fields": {
+      "data_type": "Occurrence"
+    }
+  },
+  {
+    "model": "data_manager.Dataset",
+    "pk": 1,
+    "fields":{
+      "dataset_key": "occurrence-download-fixture",
+      "title": "occurrence download fixture",
+      "eml_text": "occurrence download fixture",
+      "data_type": 2
+    }
+  },
+  {
+    "model": "data_manager.Dataset",
+    "pk": 2,
+    "fields":{
+      "dataset_key": "antarctic-dataset",
+      "title": "antarctic dataset",
+      "eml_text": "antarctic dataset",
+      "data_type": 2
+    }
+  },
+  {
+    "model": "data_manager.Dataset",
+    "pk": 3,
+    "fields":{
+      "dataset_key": "my-antarctic-metadata-dataset",
+      "title": "only antarctic metadata dataset",
+      "eml_text": "only antaractic metadata dataset",
+      "data_type": 1
+    }
+  },
+  {
+    "model": "data_manager.GBIFOccurrence",
+    "pk": 21,
+    "fields":{
+      "gbifID": "21",
+      "datasetKey": "antarctic-dataset",
+      "decimalLatitude": 20,
+      "decimalLongitude": 120,
+      "modified": "2017-01-01T08:00:00Z",
+      "dataset": 2,
+      "date_created": "2017-01-01T08:00:00Z",
+      "date_last_modified": "2017-01-01T08:00:00Z",
+      "scientificName": "belgica antarctica",
+      "row_json_text": "belgica antarctica antarctic dataset"
+    }
+  },
+  {
+    "model": "data_manager.GBIFOccurrence",
+    "pk": 1,
+    "fields":{
+      "gbifID": "1",
+      "datasetKey": "occurrence-download-fixture",
+      "decimalLatitude": 20,
+      "decimalLongitude": 120,
+      "modified": "2017-01-01T08:00:00Z",
+      "dataset": 1,
+      "date_created": "2017-01-01T08:00:00Z",
+      "date_last_modified": "2017-01-01T08:00:00Z",
+      "scientificName": "Halobaena caerulea (Gmelin, 1789) Norðmanna land",
+      "row_json_text": "Halobaena caerulea (Gmelin, 1789) Norðmanna land occurrence download fixture"
+    }
+  },
+  {
+    "model": "data_manager.GBIFOccurrence",
+    "pk": 2,
+    "fields":{
+      "gbifID": "2",
+      "datasetKey": "occurrence-download-fixture",
+      "decimalLatitude": 20,
+      "decimalLongitude": 130,
+      "modified": "2017-01-01T08:00:00Z",
+      "dataset": 1,
+      "date_created": "2017-01-01T08:00:00Z",
+      "date_last_modified": "2017-01-01T08:00:00Z",
+      "scientificName": "Halobaena caerulea (Gmelin, 1789) Tromsø",
+      "row_json_text": "Halobaena caerulea (Gmelin, 1789) Tromsø occurrence download fixture"
+    }
+  },
+  {
+    "model": "data_manager.GBIFOccurrence",
+    "pk": 3,
+    "fields":{
+      "gbifID": "3",
+      "datasetKey": "occurrence-download-fixture",
+      "decimalLatitude": 20,
+      "decimalLongitude": 160,
+      "modified": "2017-01-01T08:00:00Z",
+      "dataset": 1,
+      "date_created": "2017-01-01T08:00:00Z",
+      "date_last_modified": "2017-01-01T08:00:00Z",
+      "scientificName": "Halobaena caerulea (Gmelin, 1789) Tromsø",
+      "row_json_text": "Halobaena caerulea (Gmelin, 1789) Tromsø occurrence download fixture"
+    }
+  },
+  {
+    "model": "data_manager.GBIFOccurrence",
+    "pk": 4,
+    "fields":{
+      "datasetKey": "my_dataset",
+      "_class": "test_class",
+      "coordinateUncertaintyInMeters": 4,
+      "coordinatePrecision": 1,
+      "decimalLatitude": 20,
+      "decimalLongitude": 10,
+      "depth": 5,
+      "modified": "2017-01-01T08:00:00Z",
+      "_type": "type",
+      "day": 5,
+      "month": 12,
+      "year": 2016,
+      "dataset": 1,
+      "date_created": "2017-01-01T08:00:00Z",
+      "date_last_modified": "2017-01-01T08:00:00Z"
+    }
+  },
+  {
+    "model": "data_manager.GBIFOccurrence",
+    "pk": 5,
+    "fields":{
+      "license": "license" ,
+      "rightsHolder": "rightsHolder" ,
+      "accessRights": "accessRights" ,
+      "bibliographicCitation": "bibliographicCitation" ,
+      "references": "references" ,
+      "institutionCode": "institutionCode",
+      "collectionCode": "collectionCode",
+      "datasetName": "datasetName",
+      "dynamicProperties": "dynamicProperties",
+      "recordedBy": "recordedBy",
+      "individualCount": "individualCount",
+      "organismQuantity": "organismQuantity",
+      "organismQuantityType": "organismQuantityType",
+      "sex": "sex",
+      "lifeStage": "lifeStage",
+      "reproductiveCondition": "reproductiveCondition",
+      "behavior":  "behavior",
+      "occurrenceRemarks": "occurrenceRemarks",
+      "eventDate": "eventDate",
+      "eventTime": "eventTime",
+      "verbatimEventDate": "verbatimEventDate",
+      "samplingProtocol": "samplingProtocol",
+      "sampleSizeValue": "sampleSizeValue",
+      "sampleSizeUnit": "sampleSizeUnit",
+      "samplingEffort": "samplingEffort",
+      "fieldNotes": "fieldNotes",
+      "locality": "locality",
+      "verbatimLocality": "verbatimLocality",
+      "verbatimDepth": "verbatimDepth",
+      "minimumDistanceAboveSurfaceInMeters": "minimumDistanceAboveSurfaceInMeters",
+      "maximumDistanceAboveSurfaceInMeters": "maximumDistanceAboveSurfaceInMeters",
+      "locationAccordingTo": "locationAccordingTo",
+      "locationRemarks": "locationRemarks",
+      "geodeticDatum": "geodeticDatum",
+      "scientificName": "scientificName",
+      "kingdom": "kingdom",
+      "phylum": "phylum",
+      "_class": "_class",
+      "order": "order",
+      "family": "family",
+      "genus": "genus",
+      "subgenus": "subgenus",
+      "specificEpithet": "specificEpithet",
+      "infraspecificEpithet": "infraspecificEpithet",
+      "taxonRank": "taxonRank",
+      "scientificNameAuthorship": "scientificNameAuthorship",
+      "basisOfRecord": "basisOfRecord",
+      "datasetKey": "datasetKey",
+      "coordinateUncertaintyInMeters": 3,
+      "coordinatePrecision": 1,
+      "depth": 5,
+      "modified": "2017-01-01T08:00:00Z",
+      "_type": "type",
+      "day": 6,
+      "month": 12,
+      "year": 2016,
+      "dataset": 1,
+      "date_created": "2018-11-06T08:00:00Z",
+      "date_last_modified": "2018-12-06T08:00:00Z"
+    }
+  }
+]

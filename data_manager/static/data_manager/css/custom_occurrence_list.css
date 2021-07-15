@@ -1,0 +1,44 @@
+/*  custom css for occurrence list view
+    styles for occurrence search results page
+    extends house styles (main.css) and custom styles for data.biodiversity.aq (custom.css)
+*/
+
+/*******************
+   SEARCH FILTERS
+********************/
+#id_basis_of_record {
+    max-height: 200px;
+    overflow-x: auto;
+    overflow-y: auto;
+    list-style-type: none;
+    padding-left: 0px;  /* remove indent of checkboxes */
+
+}
+
+/* ensure that search textbox is always within panel body */
+#id_q, #id_dataset {
+    height: 30px;
+    width: 190px;
+    overflow-x: auto;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    display: block;
+    background-color: #FFFFFF;
+}
+
+/* styles for range widget */
+#id_decimal_latitude_0, #id_decimal_latitude_1, #id_decimal_longitude_0, #id_decimal_longitude_1 {
+    text-align: center;
+    width: 30%;
+    border: none;
+    display: inline-block;
+}
+
+
+/* style for occurrence search results */
+#occurrence-map {
+    height: 500px;
+    width: 80%;
+    margin: auto;
+    background-color: black;
+}

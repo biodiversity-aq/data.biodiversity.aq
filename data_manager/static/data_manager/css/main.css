@@ -1,0 +1,138 @@
+/*****************
+      HTML
+******************/
+html, body {
+    height: 100%;
+}
+
+body {
+    position: relative;
+    min-height: 100%;
+    padding-top: 60px; /* The fixed navbar will overlay your other content, unless you add padding to the top of the body. height of header*/
+}
+
+/*****************
+   GLOBAL HEADER
+******************/
+/* blue background of header*/
+.navbar-default {
+    background: #0099CC;
+    min-height: 60px;
+    border-color: transparent;
+}
+
+/* remove margin at the bottom of header */
+.navbar {
+    margin-bottom: 0px;
+    padding: 0 20px;
+}
+
+/* global-header logo*/
+.brand{
+    width: auto;
+    height: 60px;
+}
+
+/* remove default padding so that biodiversity.aq logo is well placed*/
+.navbar-default .navbar-brand {
+    padding-top: 0px;
+    margin-bottom: 10px;
+}
+
+/* inactive top-right menu items styles */
+.navbar-default .navbar-nav>li>a {
+    color: #FFF;
+    width: auto;
+    text-align: center;
+    line-height: 30px;
+    display: inline; /* so that each menu item doesn't take full width */
+    float: left;  /*float left when expand from collapse menu button*/
+}
+
+/* white background for active menu-item + hover + open dropdown menu */
+.navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:hover,
+.navbar-default .navbar-nav>li>a:hover, .navbar-default .navbar-nav>.open>a,
+.navbar-default .navbar-nav>.open>a:hover, .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover,
+.navbar-default .navbar-nav .open .dropdown-menu>.active>a,
+.navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus{
+    background: #FFF;
+    color: #333;
+    border-radius: 15px;
+}
+
+/* remove white background, changed font color back to white when clicked */
+.navbar-default .navbar-nav>li>a:focus {
+    background: transparent;
+    color: #FFF;
+}
+
+/* make glyphicons white on navbar */
+.white {
+    color: white;
+}
+
+/* make border-color transparent for collapse button */
+.navbar-default .navbar-toggle {
+    color: #FFF;
+    width: auto;
+    border-color: transparent;
+}
+
+/* me dropdown menu */
+.dropdown-menu {
+    background: #0099CC;
+    color: #FFF;
+}
+
+/* white font colour for dropdown menu on navbar */
+.navbar-default .navbar-nav .open .dropdown-menu>li>a{
+    color: #FFF;
+    display: block;
+    text-align: center;
+}
+
+
+/*****************
+  GLOBAL FOOTER
+******************/
+/* wrapper for footer */
+.footer-fixed-bottom-wrap {
+    width: 100%;
+    height: auto;
+    position: relative;
+    bottom: 0;
+}
+
+/* inner footer menu */
+.footer-menu {
+    width: 100%;
+    background: #999999;
+    text-align: center;
+    padding: 10px;
+}
+
+/* remove underline of links when hover */
+.footer-menu a {
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+/* change font color when hover */
+.footer-menu a:hover {
+    color: #1F78B4;
+}
+
+.footer-logos {
+    background: #0099CC;
+    text-align: right;
+    padding: 5px;
+}
+
+/* global-footer logos */
+.partners-logo {
+    width: auto;
+    height: 45px;
+    display: inline-block;
+    padding-left: 20px; /* add space between logos */
+}
+

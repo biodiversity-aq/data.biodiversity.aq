@@ -1,0 +1,13 @@
+stages:
+    - deploy
+
+saltstack_deploy:
+    stage: deploy
+    script:
+        - sudo /usr/local/bin/salt-call --retcode-passthrough --force-color state.apply webapps.antabif_data_portal
+    only:
+        refs:
+            - dev
+    tags:
+        - deploy
+        - antabif

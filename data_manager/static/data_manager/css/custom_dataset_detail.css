@@ -1,0 +1,29 @@
+/*  custom css for dataset detail view
+    styles for dataset page
+    extends house styles (main.css) and custom styles for data.biodiversity.aq (custom.css)
+*/
+
+
+/* GENERAL STYLES */
+h2 {
+    color: black;
+}
+
+/* increase space between h4 */
+#contributors h4 {
+    padding-top: 20px;
+}
+
+/* remove left padding for the list */
+.ul-no-bullet {
+    padding-left: 0;
+}
+
+/* map container in home page */
+#occurrence-map {
+    height: 70%;
+    width: 90%;
+    margin: auto;
+    background-color: black;
+    position: relative;  /* relative position is required for tooltip to show up */
+}

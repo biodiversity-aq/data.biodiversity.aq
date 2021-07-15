@@ -1,0 +1,136 @@
+{% extends 'search-results-base.html' %}
+{% load static %}
+{% load humanize %}
+{% load app_filters %}
+
+{% block script %}
+    <link href="{% static 'data_manager/css/custom_search_results_base.css' %}" media="screen" rel="stylesheet" type="text/css">
+    <link href="{% static 'data_manager/css/custom_occurrence_list.css' %}" media="screen" rel="stylesheet" type="text/css">
+<style>
+#id_q {
+    height: 30px;
+    width: 190px;
+    overflow-x: auto;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    display: block;
+}
+
+#id_backbone {
+    max-height: 200px;
+    overflow-x: auto;
+    overflow-y: auto;
+    list-style-type: none;
+    padding-left: 0px;
+}
+
+</style>
+{% endblock %}
+
+{% block filter %}
+<div class="col-md-12" id="search-filters">
+    <form action="." method="GET" id="filter-form">
+    <ul class="nav nav-pills nav-stacked">
+        <!--hidden input-->
+        {{ form.type }}
+        <!--error message for form-->
+        <li>{% if form.errors %}
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <div class="alert alert-danger"><strong>{{ field.label }}: {{ error|escape }}</strong></div>
+                    {% endfor %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                    <div class="alert alert-danger"><strong>{{ error|escape }}</strong></div>
+                {% endfor %}
+            {% endif %}
+        </li>
+        <!--search term-->
+        <li><h5>Search term</h5></li>
+        <li>{{ form.q }}</li>
+        <li><h5>Taxonomy backbone</h5></li>
+        <li>{{ form.backbone }}</li>
+        <li class="form-buttons">
+            <!-- SUBMIT BUTTON -->
+            <input class="btn btn-primary" type="submit">
+            <!-- RESET BUTTON -->
+            <input class="btn btn-default" type="button" onclick="resetForm()" value="Reset">
+        </li>
+    </ul>
+</form>
+</div>
+{% endblock %}
+
+{% block results %}
+<!--Display search term-->
+<div class="container">
+<h2>Search taxa</h2>
+{% if results %}
+    <h4>{{ offset|add:1 }} - {% if offset|add:20 < results_count %}{{ offset|add:20 }}{% else %}{{ results_count }}{% endif %} of {{ results_count|intcomma }} results</h4>
+    <br>
+    <div>
+        {% for result in results %}
+        <h4><a href="{% url 'taxon-detail' result.key %}">{{ result.scientificName }}</a></h4>
+        {% if result.taxonomicStatus == "ACCEPTED" %}
+            <strong style="background-color:#2166ac; color: white; padding:0px 3px;">{{ result.taxonomicStatus|lower }}</strong>
+        {% else %}
+            <strong style="background-color:#b2182b; color: white; padding:0px 3px;">{{ result.taxonomicStatus|lower }}</strong>
+        {% endif %}
+        <strong>
+            {% if result.rank %} &bull; {{ result.rank|lower }} {% else %}{% endif %}
+            {% if result.nameType %} &bull; {{ result.nameType|lower }} {% else %}{% endif %}</strong><br>
+        <h5>{% if result.datasetKey %}<a href="https://www.gbif.org/dataset/{{ result.datasetKey }}">{{ source_title_dict|get_item:result.datasetKey }}</a>{% endif %}</h5>
+        {% if result.higherClassificationMap %}
+        <p>
+            {% for parent in result.higherClassificationMap %}
+            {% if parent.rank in higher_taxa_rank %}
+            <a href="{% url 'taxon-detail' parent.key %}">{{ parent.scientificName }}</a>
+            {% if not forloop.last %} > {% else %}{% endif %}
+            {% endif %}
+            {% endfor %}
+        </p>
+        {% endif %}
+        <br>
+        {% endfor %}
+    </div>
+    <br>
+{% else %}
+<h4>Sorry, no match found</h4>
+{% endif %}
+
+<!--simple pagination-->
+{% load url_replace %}
+    <nav aria-label="...">
+        <ul class="pager">
+            {% if previous %}<li><a href="?{% url_replace offset=previous|add:-1 %}">Previous</a></li>{% endif %}
+            {% if not end_of_records %}<li><a href="?{% url_replace offset=offset|add:'20' %}">Next</a></li>{% endif %}
+        </ul>
+    </nav>
+</div>
+
+{% endblock %}
+
+
+{% block bottom_script %}
+<script>
+/* Function to reset form
+Happens when user click on reset button*/
+function resetForm() {
+    // clear search term
+    $('#id_q').val('');
+    $('input:checkbox').prop('checked', false);
+}
+
+$(document).ready(function() {
+
+    // toggle for offcanvas/sidebar
+    $('[data-toggle=offcanvas]').click(function() {
+        $('.row-offcanvas').toggleClass('active');
+    });
+
+    // select2 for keywords filter
+    $('#id_keyword').select2({placeholder: 'filter with keywords'});
+
+});
+</script>
+{% endblock %}

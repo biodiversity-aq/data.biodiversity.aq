@@ -1,0 +1,206 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}
+<title>{{ dataset.title }}</title>
+{% endblock %}
+
+{% block script %}
+<link href="{% static 'data_manager/css/custom_dataset_detail.css' %}" media="screen" rel="stylesheet" type="text/css">
+
+{% endblock %}
+
+{% block body %}
+
+<!----- DATASET SUMMARY ----->
+<div class="container text-center more-spacing" id="summary">
+    <strong>{{ dataset.data_type|upper }} DATASET </strong>
+        <h2>{{ dataset.title }}</h2>
+    <ul class="ul-no-bullet">
+        <!-- contacts -->
+        {% if contacts %}
+        <li><h4>
+            {% for contact in contacts %}
+                {% if not forloop.last %}{{ contact.full_name }}&ensp;&bull;&ensp;{% else %}
+                {{ contact.full_name }}{% endif %}
+            {% endfor %}
+        </h4></li>
+        {% endif %}
+        <!-- publication date and publisher -->
+        <li>{% if dataset.pub_date %}<strong>Published {{ dataset.pub_date }}&ensp;&bull;&ensp;</strong>{% endif %}
+        <strong>{{ dataset.publisher }}</strong></li>
+        <!-- license -->
+        <li><strong>{{ dataset.intellectual_right }}</strong></li>
+    </ul>
+    <!--Download button-->
+    {% if not dataset.deleted %}
+		{%  if dataset.data_type.data_type == 'Metadata' %}
+			<a href="https://api.gbif.org/v1/dataset/{{ dataset.dataset_key }}/document" class="btn btn-primary"><span class="glyphicon glyphicon-download-alt"></span> Download</a>
+		{% elif dataset.data_type.data_type == 'Occurrence' or dataset.data_type.data_type == 'Sampling Event'%}
+    		<a href="{% url 'occurrence-download' %}?dataset={{ dataset.id }}" class="btn btn-primary"><span class="glyphicon glyphicon-download-alt"></span> Download</a>
+    	{%  else %}
+		{% endif %}
+    {% endif %}
+    <br>
+    <!-- abstract -->
+    {% if dataset.abstract %}<hr>
+    <h3>Abstract</h3>
+    <p>{{ dataset.abstract|safe|urlize }}</p>
+    {% endif %}
+    <hr>
+</div>
+<!----- OCCURRENCE MAP ----->
+{% if has_grid %}
+<div class="container text-center">
+    {% if dataset.filtered_record_count %}
+    <h3>{{ dataset.filtered_record_count|intcomma }} occurrence records</h3>
+    {% endif %}
+    <div id="occurrence-map"><div id="info"></div></div>
+</div>
+<hr>
+{% endif %}
+<!----- DATASET INFORMATION ----->
+<div class="container">
+    <!----- DATASET INFORMATION ----->
+    <div class="col-md-9 col-md-offset-1">
+        <!----- OCCURRENCES ----->
+        {% if dataset.filtered_record_count %}
+        <div id="occurrences" class="more-spacing">
+            <h3>Occurrences</h3>
+            <a href="{% url 'occurrence-search' %}?type=occurrence&dataset={{ dataset.id }}">Link to occurrence records</a>
+        </div>
+        <br>
+        {% endif %}
+        <!----- KEYWORDS ----->
+        <div id="keywords" class="more-spacing">
+            <h3>Keywords</h3>
+            {% if keywords %}
+            {% for thesaurus, keyword_list in keywords.items %}
+            <div class="row">
+                <div class="col-md-2"><strong>Thesaurus</strong></div>
+                <div class="col-md-8">{{ thesaurus|urlize }}</div>
+            </div>
+            <div class="row">
+                <div class="col-md-2"><strong>Keywords</strong></div>
+                <div class="col-md-8">{{ keyword_list|join:", " }}</div>
+            </div>
+            <br>
+            {% endfor %}
+            {% else %}
+            <p>No information available</p>
+            <br>
+            {% endif %}
+        </div>
+        <!----- ALTERNATE IDENTIFIERS ----->
+        <div id="alternate-ids" class="more-spacing">
+            <h3>Alternate identifiers</h3>
+            <!--doi-->
+            {% if doi %}
+            <div class="row">
+                <div class="col-md-2"><strong>DOI</strong></div>
+                <div class="col-md-8"><a href="https://doi.org/{{ doi }}" target="_blank">
+                    <span class="glyphicon glyphicon-new-window"></span> {{ dataset.doi }}</a></div>
+            </div>
+            <br>
+            {% endif %}
+            <!--GBIF UUID-->
+            {% if dataset.dataset_key %}
+            <div class="row">
+                <div class="col-md-2"><strong>GBIF UUID</strong></div>
+                <div class="col-md-8">
+                    <a href="http://www.gbif.org/dataset/{{ dataset.dataset_key }}" target="_blank">
+                        <span class="glyphicon glyphicon-new-window"></span> {{ dataset.dataset_key }}
+                    </a>
+                </div>
+            </div>
+            <br>
+            {% endif %}
+            {% if alternate_links %}
+            <div class="row">
+                <div class="col-md-2"><strong>Others</strong></div>
+                <div class="col-md-8">
+                    <ul class="ul-no-bullet">
+                        {% for link in alternate_links %}<li><a href="{{ link }}">{{ link }}</a></li>{% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <br>
+            {% endif %}
+        </div>
+        <!----- DATA PROVIDERS ----->
+        <div id="contributors" class="more-spacing">
+            <h3>Contributors</h3>
+            {% if not contributors %}
+            <p>No information available</p>
+            {% else %}
+            <!--person-->
+            {% for person in contributors %}
+            <h4>{{ person.full_name }}</h4>
+            {% for p in person.personTypeRole.all %}{% if p.dataset_id == dataset.id %}<strong>{{ p.person_type }}{% if p.role %} ({{ p.role|lower }}){% endif %}&emsp;</strong>{% endif %}{% endfor %}<br>
+            {% if person.email %}<span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> {{ person.email }}<br>{% endif %}
+            <!--organization-->
+            {% if organizations %}
+            {% for name, organization in organizations.all %}
+            {% if name == person.full_name %}
+            {{ organization }}
+            {% endif %} <!-- if name == person.full_name -->
+            {% endfor %} <!--for organizations.all -->
+            {% endif %} <!-- if organizations -->
+            {% endfor %} <!-- for person in contributors -->
+            <br>
+            <br>
+            {% endif %}<!--if contributors-->
+        </div>
+        <!-- PROJECT -->
+        {% if dataset.project %}
+        <div id="project" class="more-spacing">
+            <h3>Project</h3>
+            <div class="row">
+                <div class="col-md-2"><strong>Project title</strong></div>
+                <div class="col-md-8">{{ dataset.project.title }}</div>
+            </div>
+            <br>
+        </div>
+        {% endif %}
+        <!-- CITATION -->
+        <div id="citation" class="more-spacing">
+            <h3>Citation</h3>
+            <p>{{ citation|urlize }}</p>
+            <br>
+        </div>
+		{% if dataset.full_record_count != dataset.filtered_record_count %}
+		<div id="remarks" class="more-spacing">
+			<h3>Remarks</h3>
+			<p>{{ dataset.percentage_records_retained }}% of all occurrences in this dataset are shown in map.</p>
+			<p>Full dataset contains {{ dataset.full_record_count|intcomma }} occurrences.</p>
+			<br>
+		</div>
+		{% endif %}
+        <!--DOWNLOAD-->
+        <div id="download-event" class="more-spacing">
+            <h3>Download Events</h3>
+            <a href="{% url 'dataset-activity' dataset.id %}">Link to download events</a>
+            <br>
+        </div>
+    </div>
+</div>
+
+<br>
+{% endblock %}
+
+{% block bottom_script %}
+<script src="{% static 'data_manager/js/plot_map.js' %}"></script>
+<script type="text/javascript">
+
+$(document).ready(function(){
+
+    var vectorUrl = "{% url 'api-occurrence-grid' %}?type=occurrence&dataset={{ dataset.id }}";
+    var baseLayerUrl = "{{ GEOSERVER_HOST }}" + "/antabif/wms?";
+    console.log(vectorUrl + ' occurrence-map ' + baseLayerUrl);
+    plotMap(vectorUrl, 'occurrence-map', baseLayerUrl);
+
+});
+
+</script>
+{% endblock %}

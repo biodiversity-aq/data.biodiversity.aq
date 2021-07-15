@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    <title>Search results</title>
+{% endblock %}
+
+{% block script %}
+{% endblock %}
+
+
+{% block body %}
+<!-- FILTERS FOR REFINED SEARCH-->
+<div class="row-offcanvas row-offcanvas-left">
+    <div id="sidebar" class="sidebar-offcanvas">
+        {% block filter %}
+        {% endblock %}
+    </div>
+    <div id="search-results">
+        <div class="col-md-12">
+            <!-- toggle offcanvas button-->
+            <p class="visible-xs">
+                <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">
+                    <i class="glyphicon glyphicon-chevron-left"></i>
+                </button>
+            </p>
+            <!-- SEARCH RESULTS-->
+            {% block results %}
+            {% endblock %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block bottom_script %}
+{% endblock %}

@@ -1,0 +1,181 @@
+[
+  {
+    "model": "data_manager.DataType",
+    "pk": 1,
+    "fields": {
+      "data_type": "Occurrence"
+    }
+  },
+  {
+    "model": "data_manager.DataType",
+    "pk": 2,
+    "fields": {
+      "data_type": "Checklist"
+    }
+  },
+  {
+    "model": "data_manager.Project",
+    "pk": 1,
+    "fields": {
+      "title": "antabif project",
+      "funding": "antabif funding"
+    }
+  },
+  {
+    "model": "data_manager.Project",
+    "pk": 2,
+    "fields": {
+      "title": "bedic project",
+      "funding": "bedic funding"
+    }
+  },
+  {
+    "model": "data_manager.Publisher",
+    "pk": 1,
+    "fields": {
+      "publisher_key": "antabif-key",
+      "publisher_name": "Antarctic Biodiversity Information Facility"
+    }
+  },
+  {
+    "model": "data_manager.Publisher",
+    "pk": 2,
+    "fields": {
+      "publisher_key": "rbins-key",
+      "publisher_name": "Royal Belgian Institute of Natural Sciences"
+    }
+  },
+  {
+    "model": "data_manager.Dataset",
+    "pk": 1,
+    "fields": {
+      "data_type": 1,
+      "project": 1,
+      "publisher": 1,
+      "dataset_key": "123",
+      "title": "First dataset title",
+      "abstract": "First dataset abstract",
+      "full_record_count": 100,
+      "deleted_record_count": 10,
+      "filtered_record_count": 90,
+      "percentage_records_retained": 89,
+      "intellectual_right": "CC BY 4.0",
+      "eml_text": "Occurrence First dataset title First dataset abstract CC BY 4.0"
+    }
+  },
+  {
+    "model": "data_manager.Dataset",
+    "pk": 2,
+    "fields": {
+      "data_type": 2,
+      "project": 2,
+      "publisher": 2,
+      "dataset_key": "456",
+      "title": "Second dataset title",
+      "abstract": "Second dataset abstract",
+      "full_record_count": 200,
+      "deleted_record_count": 0,
+      "filtered_record_count": 200,
+      "percentage_records_retained": 100,
+      "intellectual_right": "Public domain 1.0",
+      "eml_text": "Checklist Second dataset title Second dataset abstract public domain 1.0"
+    }
+  },
+  {
+    "model": "data_manager.Keyword",
+    "pk": 1,
+    "fields": {
+      "keyword": "Occurrence",
+      "thesaurus": "GBIF thesaurus",
+      "dataset": [1]
+    }
+  },
+  {
+    "model": "data_manager.Keyword",
+    "pk": 2,
+    "fields": {
+      "keyword": "Checklist",
+      "thesaurus": "GBIF thesaurus",
+      "dataset": [2]
+    }
+  },
+  {
+    "model": "data_manager.Keyword",
+    "pk": 3,
+    "fields": {
+      "keyword": "RBINS",
+      "thesaurus": "n/a",
+      "dataset": [2]
+    }
+  },
+  {
+    "model": "data_manager.Person",
+    "pk": 1,
+    "fields": {
+      "given_name": "1",
+      "surname": "Person",
+      "email": "person1@email.com",
+      "full_name": "Person 1"
+    }
+  },
+  {
+    "model": "data_manager.Person",
+    "pk": 2,
+    "fields": {
+      "given_name": "1",
+      "surname": "Person",
+      "email": "person1_new@email.com",
+      "full_name": "Person 1"
+    }
+  },
+  {
+    "model": "data_manager.Person",
+    "pk": 3,
+    "fields": {
+      "given_name": "2",
+      "surname": "Person",
+      "email": "",
+      "full_name": "Person 2"
+    }
+  },
+  {
+    "model": "data_manager.PersonTypeRole",
+    "pk": 1,
+    "fields": {
+      "person": 1,
+      "person_type": "contact",
+      "dataset": 1,
+      "project": 1
+    }
+  },
+  {
+    "model": "data_manager.PersonTypeRole",
+    "pk": 2,
+    "fields": {
+      "person": 2,
+      "person_type": "contact",
+      "dataset": 1,
+      "project": 1
+    }
+  },
+  {
+    "model": "data_manager.PersonTypeRole",
+    "pk": 3,
+    "fields": {
+      "person": 1,
+      "person_type": "personnel",
+      "dataset": 1,
+      "project": 1
+    }
+  },
+  {
+    "model": "data_manager.PersonTypeRole",
+    "pk": 4,
+    "fields": {
+      "person": 2,
+      "person_type": "contact",
+      "dataset": 2,
+      "project": 2
+    }
+  }
+]

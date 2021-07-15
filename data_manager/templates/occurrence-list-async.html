@@ -1,0 +1,116 @@
+{% extends 'search-results-base.html' %}
+{% load static %}
+{% load cache %}
+{% load url_replace %}
+{% load proper_paginate %}
+
+
+{% block script %}
+<!-- Custom CSS -->
+<link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet" />
+<link href="{% static 'data_manager/css/custom_search_results_base.css' %}" media="screen" rel="stylesheet" type="text/css">
+<link href="{% static 'data_manager/css/custom_occurrence_list.css' %}" media="screen" rel="stylesheet" type="text/css">
+{% endblock %}
+
+
+{% block filter %}
+<div class="col-md-12" id="search-filters">
+    <form action="." method="GET" id="filter-form">
+        <!--cache for a month-->
+        {% cache 2592000 formcache key %}
+        <ul class="nav nav-pills nav-stacked">
+            <!--hidden input-->
+            {{ form.type }}
+            {{ form.taxon }}
+            <!--error message for form-->
+            <li>{% if form.errors %}
+                {% for field in form %}
+                {% for error in field.errors %}
+                <div class="alert alert-danger"><strong>{{ field.label }}: {{ error|escape }}</strong></div>
+                {% endfor %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                <div class="alert alert-danger"><strong>{{ error|escape }}</strong></div>
+                {% endfor %}
+                {% endif %}
+            </li>
+            <!--search term-->
+            <li><h5>Search term</h5></li>
+            <li>{{ form.q }}</li>
+            <!--search term-->
+            <li><h5>Dataset</h5></li>
+            <li>{{ form.dataset }}</li>
+            <!--basis of record-->
+            <li><h5>Basis of record</h5></li>
+            <li>{{ form.basis_of_record|lower }}</li>
+            <!--decimal latitude-->
+            <li><h5>Decimal latitude</h5></li>
+            <li>{{ form.decimal_latitude }}</li>
+            <li id="latitude-range"></li>
+            <!--decimal longitude-->
+            <li><h5>Decimal longitude</h5></li>
+            <li>{{ form.decimal_longitude }}</li>
+            <li id="longitude-range"></li>
+            <li class="form-buttons">
+                <!-- SUBMIT BUTTON -->
+                <input class="btn btn-primary" type="submit" formaction="{% url 'occurrence-search' %}">
+                <!-- RESET BUTTON -->
+                <input class="btn btn-default" type="button" onclick="resetForm()" value="Reset">
+                <!-- DOWNLOAD BUTTON -->
+                <input class="btn btn-primary" type="submit" value="Download" formaction="{% url 'occurrence-download' %}">
+            </li>
+        </ul>
+        {% endcache %}
+    </form>
+
+</div>
+{% endblock %}
+
+{% block results %}
+<div class="container-fluid" id="results-container">
+    <h2 id="results-count"></h2>
+    <div id="occurrence-map"><div id="info"></div></div>
+    <div class="table-responsive" id="results-table" style="margin-top: 30px;"></div>
+</div>
+{% endblock %}
+
+{% block bottom_script %}
+<script>
+    // for async loading of occurrence search results, search filter and records count
+    var apiSearch = "{% url 'api-occurrence-search' %}?{{ request.META.QUERY_STRING|safe }}";
+    var resultsCount = "{% url 'api-occurrence-count' %}?{{ request.META.QUERY_STRING|safe }}";
+
+    // variables for latitude and longitude range slider
+    {% if request.GET.decimal_latitude_min %}
+    var latitudeRange = [{{ request.GET.decimal_latitude_min }}, {{ request.GET.decimal_latitude_max }}];
+    var longitudeRange = [{{ request.GET.decimal_longitude_min }}, {{ request.GET.decimal_longitude_max }}];
+    {% else %}
+    var latitudeRange = [-90, 90];
+    var longitudeRange = [-180, 180];
+    {% endif %}
+</script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+        integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
+        crossorigin="anonymous"></script>
+<script src="{% static 'data_manager/js/search.js' %} "></script>
+<script src="{% static 'data_manager/js/plot_map.js' %}"></script>
+<script>
+$(document).ready(function() {
+    // toggle for offcanvas/sidebar
+    $('[data-toggle=offcanvas]').click(function() {
+        $('.row-offcanvas').toggleClass('active');
+    });
+    getCount(resultsCount);
+    getPage(apiSearch);
+    // lat long slider
+    latLongRangeSlider("#latitude-range", latitudeRange, "#id_decimal_latitude_0", "#id_decimal_latitude_1",
+    -90.00, 90.00, "#decimal-latitude-range" );
+    latLongRangeSlider("#longitude-range", longitudeRange, "#id_decimal_longitude_0", "#id_decimal_longitude_1",
+    -180.00, 180.00, "#decimal-longitude-range" );
+    // display occurrences on map
+    var vectorUrl = "{% url 'api-occurrence-grid' %}?{{ request.META.QUERY_STRING|safe }}";
+    var baseLayerUrl = "{{ GEOSERVER_HOST }}" + "/antabif/wms?";
+    plotMap(vectorUrl, 'occurrence-map', baseLayerUrl);
+});
+</script>
+{% endblock %}

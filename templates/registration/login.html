@@ -1,0 +1,36 @@
+{% extends 'registration/base_registration.html' %}
+{% load static %}
+
+{% block content %}
+<div style="margin: auto; max-width:250px;">
+    <h2>Sign in</h2>
+    <form method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+        {% if form.errors %}
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <div class="alert alert-danger" role="alert">{{ field.label }}: {{ error|escape }}</div>
+                        <br>
+                    {% endfor %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                    <div class="alert alert-danger" role="alert">{{ error|escape }}</div>
+                    <br>
+                {% endfor %}
+        {% endif %}
+        <div class="form-group">
+            <input type="text" name="{{ form.username.html_name }}" id="{{ form.username.id_for_label }}" class="form-control" required placeholder="Email">
+        </div>
+        <div class="form-group">
+            <input type="password" name="{{ form.password.html_name }}" id="{{ form.password.id_for_label }}" class="form-control" required placeholder="Password">
+        </div>
+
+        <input class="btn btn-primary" type="submit" value="Log In" style="margin-top: 10px;"/>
+        <input type="hidden" name="next" value="{{ next }}" />
+    </form>
+
+    {# Assumes you setup the password_reset view in your URLconf #}
+    <br>
+    <p><a href="{% url 'password_reset' %}">Forgot your password?</a></p>
+</div>
+{% endblock %}

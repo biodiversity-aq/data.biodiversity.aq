@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block title %}
+    <title>Statistics</title>
+{% endblock %}
+
+{% block body %}
+<div class="container text-center more-spacing">
+    <strong>{{ dataset.data_type|upper }} DATASET </strong>
+    <h2><a href="{% url 'dataset-detail-view' dataset.id %}">{{ dataset.title }}</a></h2>
+    <ul class="ul-no-bullet">
+        {% if dataset.pub_date %}<li><strong>Published {{ dataset.pub_date }} &bull;</strong>{% else %}<li>{% endif %}
+        {% if dataset.publisher %}<strong>{{ dataset.publisher }}</strong></li>{% else %}</li>{% endif %}
+        <!-- license -->
+        <li><strong>{{ dataset.intellectual_right }}</strong></li>
+    </ul>
+    <hr>
+</div>
+
+<div class="container">
+    <h3>Downloads</h3>
+    <p>Total number of downloads: {{ total_downloads|intcomma|default_if_none:0 }}</p>
+</div>
+
+{% endblock %}

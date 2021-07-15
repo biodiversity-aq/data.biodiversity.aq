@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}
+<title>SCAR Antarctic Biodiversity Portal</title>
+{% endblock %}
+
+{% block script %}
+<link href="{% static 'data_manager/css/custom_home.css' %}" media="screen" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block body %}
+<div class="jumbotron container-fluid" style="background-image: url('{% static "data_manager/images/DSC_2090.jpg" %}')">
+    <div class="container text-center">
+        <div class="col-md-7">
+            <h2>SCAR Antarctic Biodiversity Portal</h2>
+            <!-- SEARCH BOX -->
+            <div class="tab" role="tabpanel">
+                <ul class="nav nav-tabs nav-justified" role="tablist">
+                    <li class="active"><a href="#dataset-body" data-toggle="tab">Dataset</a></li>
+                    <li><a href="#occ-body" data-toggle="tab">Occurrence</a></li>
+                    <li><a href="#taxon-body" data-toggle="tab">Taxon</a></li>
+                </ul>
+            </div>
+            <div class="tab-content">
+                <div class="tab-pane fade in active" id="dataset-body">
+                    <form method="GET" action="{% url 'dataset-search' %}" class="search-form">
+                        <div class="input-group">
+                            <input type="text" class="form-control input-lg" name="q" placeholder="Search for datasets">
+                            <div class="input-group-btn">
+                                <button type="submit" class="btn btn-lg btn-custom" aria-expanded="false">
+                                    <span class="glyphicon glyphicon-search"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="tab-pane fade" id="occ-body">
+                    <form method="GET" action="{% url 'occurrence-search' %}" class="search-form">
+                        <div class="input-group">
+                            <input type="text" class="form-control input-lg" name="q" placeholder="Search for occurrences">
+                            <div class="input-group-btn">
+                                <button type="submit" class="btn btn-lg btn-custom" aria-expanded="false">
+                                    <span class="glyphicon glyphicon-search"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="tab-pane fade" id="taxon-body">
+                    <form method="GET" action="{% url 'taxon-search' %}" class="search-form">
+                        <div class="input-group">
+                            <input type="text" class="form-control input-lg" name="q" placeholder="Search for taxon">
+                            <div class="input-group-btn">
+                                <button type="submit" class="btn btn-lg btn-custom" aria-expanded="false">
+                                    <span class="glyphicon glyphicon-search"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- IMAGE CAPTION -->
+<p class="text-muted pull-right" id="image-credit">Picture by ANDEEP3 expedition, 2004/2005</p>
+<!-------STATISTICS------->
+<div class="container content">
+    <h2>Statistics</h2>
+    <ul class="ul-no-bullet">
+        <li>Total number of datasets: {{ total_datasets|intcomma }}</li>
+        <li>Total number of metadata-only datasets: {{ metadata_datasets_count|intcomma }}</li>
+        <li>Total number of occurrence datasets: {{ occurrence_datasets_count|intcomma }}</li>
+        <li>Total number of sampling event datasets: {{ event_datasets_count|intcomma }}</li>
+        <li>Total number of checklist datasets: {{ checklists_count|intcomma }}</li>
+        <li>Total number of occurrence records: {{ total_occurrences|intcomma }}</li>
+    </ul>
+</div>
+<!-------MAP OF ALL OCCURRENCES------->
+<div class="container">
+    <h2>Distribution of all occurrences</h2>
+    <div id="all-dataset-map"></div>
+</div>
+<br>
+{% endblock %}
+
+{% block bottom_script %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.4.4/proj4-src.js"></script>
+<script>
+/*
+    MAPS
+*/
+var hexagon_size = 100000;
+var zoom = 3;
+var projection = new ol.proj.Projection({
+    code: 'EPSG:3031',
+    units: 'm'
+});
+
+var base_layer = new ol.layer.Image({
+    source: new ol.source.ImageWMS({
+        attributions:'<p>Base layer <a href="http://www.add.scar.org/">SCAR Antarctic Digital Database</a></p>',
+        params: {
+            'SERVICE': 'WMS',
+            'VERSION': '1.1.1',
+            'SRS': 'EPSG:3031',
+            'LAYERS': 'antabif:antarctica_basemap',
+            'FORMAT':'image/png',
+            'TILED': true,
+            'BUFFER': 0,
+            'TRANSPARENT': true,
+        },
+        url: "{{ GEOSERVER_HOST }}" + "/antabif/wms?"
+    })
+})
+
+var occurrence_layer = new ol.layer.Image({
+    source: new ol.source.ImageWMS({
+        params: {
+            'SERVICE': 'WMS',
+            'VERSION': '1.1.1',
+            'SRS': 'EPSG:3031',
+            'LAYERS': 'antabif:hexagon_grid_counts_all',
+            'FORMAT':'image/png',
+            'TILED': true,
+            'BUFFER': 0,
+            'CQL_FILTER': 'size=250000',
+        },
+        url: "{{ GEOSERVER_HOST }}" + "/antabif/wms?"
+    })
+});
+
+var all_occurrence_map = new ol.Map({
+    layers: [occurrence_layer, base_layer],
+    target: 'all-dataset-map',
+    view: new ol.View({
+        center: [0, 0],
+        projection: projection,
+        zoom: zoom,
+        maxZoom: 6,
+        minZoom: 3,
+    }),
+});
+
+
+// all_occurrence_map.getView().getZoom() will return a series of zoom as long as map moves
+var getCurrentZoom = all_occurrence_map.getView().getZoom();
+
+// change hexagon size using CQL_FILTER when user zoom in
+all_occurrence_map.on('moveend', (function() {
+    if (getCurrentZoom != all_occurrence_map.getView().getZoom()) {
+        getCurrentZoom = all_occurrence_map.getView().getZoom();
+        zoom = getCurrentZoom;  // for all_occurrence_map
+        switch (zoom) {
+            default:
+                occurrence_layer.getSource().updateParams({'CQL_FILTER': 'size=250000'});
+                break;
+            case 4:
+                occurrence_layer.getSource().updateParams({'CQL_FILTER': 'size=100000'});
+                break;
+            case 5:
+                occurrence_layer.getSource().updateParams({'CQL_FILTER': 'size=50000'});
+                break;
+            case 6:
+                occurrence_layer.getSource().updateParams({'CQL_FILTER': 'size=25000'});
+                break;
+        }
+    }
+}));
+
+// disable the scroll zoom
+all_occurrence_map.getInteractions().forEach(function(interaction) {
+  if (interaction instanceof ol.interaction.MouseWheelZoom) {
+    interaction.setActive(false);
+  }
+}, this);
+
+
+</script>
+{% endblock%}
+

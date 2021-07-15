@@ -1,0 +1,214 @@
+[
+  {
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+      "username": "admin@email.com",
+      "email": "admin@email.com",
+      "password": "secret",
+      "is_active": true,
+      "is_superuser": true,
+      "is_staff": true
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 2,
+    "fields": {
+      "username": "staff@email.com",
+      "email": "staff@email.com",
+      "password": "secret",
+      "is_active": true,
+      "is_superuser": false,
+      "is_staff": true
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 3,
+    "fields": {
+      "username": "user@email.com",
+      "email": "user@email.com",
+      "password": "secret",
+      "is_active": false,
+      "is_superuser": false,
+      "is_staff": false
+    }
+  },
+  {
+    "model": "data_manager.HarvestedDataset",
+    "pk": 1,
+    "fields": {
+      "key": "ddbc7560-6646-47b0-ac51-9608dde25c44",
+      "title": "First Antarctic dataset",
+      "hostingOrganizationKey": "a806aecc-45da-438a-9316-b093810caa1a",
+      "hostingOrganizationTitle": "My hosting organization",
+      "license": "http://creativecommons.org/licenses/by/4.0/legalcode",
+      "publishingCountry": "AQ",
+      "publishingOrganizationKey": "3e716c38-25f9-42c6-805d-d2def386e759",
+      "publishingOrganizationTitle": "My publishing organization",
+      "recordCount": 10,
+      "type": "Occurrence",
+      "deleted_from_gbif": false,
+      "include_in_antabif": true,
+      "import_full_dataset": true,
+      "dataset": 1
+    }
+  },
+  {
+    "model": "data_manager.DataType",
+    "pk": 1,
+    "fields": {
+      "data_type": "Antarctic Occurrence"
+    }
+  },
+  {
+    "model": "data_manager.DataType",
+    "pk": 2,
+    "fields": {
+      "data_type": "Sampling Event"
+    }
+  },
+  {
+    "model": "data_manager.Publisher",
+    "pk": 1,
+    "fields": {
+      "publisher_key": "fdeae34d-8eb5-4da6-9e42-780c296dfcf7",
+      "publisher_name": "First Antarctic publisher",
+      "publisher_from_gbif": "First publisher fdeae34d-8eb5-4da6-9e42-780c296dfcf7"
+    }
+  },
+  {
+    "model": "data_manager.Publisher",
+    "pk": 2,
+    "fields": {
+      "publisher_key": "b440634b-f253-4eab-8f6a-779ddd0ffb79",
+      "publisher_name": "Second publisher",
+      "publisher_from_gbif": "Second publisher b440634b-f253-4eab-8f6a-779ddd0ffb79"
+    }
+  },
+  {
+    "model": "data_manager.Project",
+    "pk": 1,
+    "fields": {
+      "title": "First Antarctic project title",
+      "funding": "First project funding"
+    }
+  },
+  {
+    "model": "data_manager.Project",
+    "pk": 2,
+    "fields": {
+      "title": "Random project title",
+      "funding": ""
+    }
+  },
+  {
+    "model": "data_manager.Keyword",
+    "pk": 1,
+    "fields": {
+      "keyword": "First Antarctic dataset keyword",
+      "thesaurus": "First thesaurus",
+      "dataset": [1]
+    }
+  },
+  {
+    "model": "data_manager.Keyword",
+    "pk": 2,
+    "fields": {
+      "keyword": "First and second dataset keyword",
+      "thesaurus": "Second thesaurus",
+      "dataset": [1, 2]
+    }
+  },
+  {
+    "model": "data_manager.Keyword",
+    "pk": 3,
+    "fields": {
+      "keyword": "Second dataset keyword",
+      "thesaurus": "Second thesaurus",
+      "dataset": [2]
+    }
+  },
+  {
+    "model": "data_manager.Person",
+    "pk": 1,
+    "fields": {
+      "given_name": "First",
+      "surname": "Antarctic Person",
+      "full_name": "First Antarctic Person",
+      "email": "firstperson@email.com"
+    }
+  },
+  {
+    "model": "data_manager.Person",
+    "pk": 2,
+    "fields": {
+      "given_name": "First",
+      "surname": "Antarctic Person",
+      "full_name": "First Antarctic Person",
+      "email": "firstpersonsecond@email.com"
+    }
+  },
+  {
+    "model": "data_manager.Person",
+    "pk": 3,
+    "fields": {
+      "given_name": "Second",
+      "surname": "Person",
+      "full_name": "Second Person",
+      "email": "secondperson@email.com"
+    }
+  },
+  {
+    "model": "data_manager.Dataset",
+    "pk": 1,
+    "fields": {
+      "dataset_key": "ddbc7560-6646-47b0-ac51-9608dde25c44",
+      "title": "First Antarctic dataset",
+      "publisher": 1,
+      "data_type": 1,
+      "project": 1,
+      "eml_text": "ddbc7560-6646-47b0-ac51-9608dde25c44 First dataset First publisher First project title First project funding First dataset keyword First thesaurus First and second dataset keyword Second thesaurus"
+    }
+  },
+  {
+    "model": "data_manager.Dataset",
+    "pk": 2,
+    "fields": {
+      "dataset_key": "519837f3-ce1d-4964-b650-1b71e31b2935",
+      "title": "Second dataset",
+      "publisher": 2,
+      "data_type": 2,
+      "project": null,
+      "eml_text": "519837f3-ce1d-4964-b650-1b71e31b2935 Second dataset Second publisher Second dataset keyword Second thesaurus"
+    }
+  },
+  {
+    "model": "data_manager.BasisOfRecord",
+    "pk": 1,
+    "fields": {
+      "basis_of_record": "Antarctic human observation"
+    }
+  },
+  {
+    "model": "data_manager.BasisOfRecord",
+    "pk": 2,
+    "fields": {
+      "basis_of_record": "fossil specimen"
+    }
+  },
+  {
+    "model": "data_manager.GBIFOccurrence",
+    "pk": 1,
+    "fields": {
+      "gbifID": 1,
+      "dataset": 1,
+      "decimalLatitude": 75.1234,
+      "decimalLongitude": 75.4321,
+      "scientificName": "belgica antarctica",
+      "date_created": "2019-01-02",
+      "date_last_modified": "2019-09-16"
+    }
+  }
+]

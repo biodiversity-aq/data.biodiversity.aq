@@ -1,0 +1,14 @@
+{% extends "rest_framework/base.html" %}
+{% load static %}
+
+{% block bootstrap_theme %}
+    <link rel="stylesheet" href="https://bootswatch.com/3/paper/bootstrap.min.css" type="text/css">
+{% endblock %}
+
+{% block branding %}
+    <span>
+        <a class="brand" href="{% url 'home' %}">
+            <img src="{% static '/data_manager/logos/logo-biodiversityaq-white.png' %}" class="brand" style="height: 60px;">
+        </a>
+    </span>
+{% endblock %}
